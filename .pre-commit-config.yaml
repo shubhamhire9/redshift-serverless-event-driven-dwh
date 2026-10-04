@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0  # temporary; `pre-commit autoupdate` replaces it with a real tag
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -11,7 +11,7 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.30.0  # temporary; replaced by autoupdate
+    rev: v8.30.0
     hooks:
       - id: gitleaks
 
