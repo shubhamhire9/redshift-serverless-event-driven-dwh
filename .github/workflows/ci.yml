@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true  # a newer push cancels the older run
+
+env:
+  POETRY_VERSION: "2.5.1"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry (pinned)
+        run: pipx install "poetry==${{ env.POETRY_VERSION }}"
+
+      - name: Cache virtualenv
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-poetry${{ env.POETRY_VERSION }}-${{ hashFiles('poetry.lock') }}
+
+      - name: Validate pyproject and lock file
+        run: |
+          poetry check
+          poetry check --lock
+
+      - name: Install dependencies
+        run: poetry install --with dev,test,local
+
+      - name: Lint, format check, type check
+        env:
+          SKIP: gitleaks  # scanned in the separate job below
+        run: poetry run pre-commit run --all-files
+
+  secrets-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history, so old commits are scanned too
+
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
