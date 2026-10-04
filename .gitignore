@@ -1,0 +1,41 @@
+# Python / Poetry
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+dist/
+build/
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials
+.aws/
+
+# Terraform
+.terraform/
+!.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+*.tfplan
+tfplan*
+crash.log
+
+# Data and notebooks
+data/
+.ipynb_checkpoints/
+
+# Editor / OS
+.idea/
+.DS_Store
+Thumbs.db
