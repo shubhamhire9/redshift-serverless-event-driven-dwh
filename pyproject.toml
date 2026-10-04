@@ -1,0 +1,37 @@
+[project]
+name = "redshift-serverless-event-driven-dwh"
+version = "0.1.0"
+description = "Serverless, event-driven medallion pipeline: S3, Lambda, Glue (PySpark), Redshift Serverless."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"  # matches Glue 5.0 and Lambda Python 3.11
+dependencies = ["boto3 (>=1.43.108,<2.0.0)", "typer (>=0.27.2,<0.28.0)", "faker (>=40.40.0,<41.0.0)"]
+
+[tool.poetry]
+package-mode = false  # this is an application, not a library to publish
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.16.10"
+black = "^26.5.1"
+mypy = "^2.4.0"
+pre-commit = "^4.6.2"
+boto3-stubs = {extras = ["glue", "lambda", "redshift-data", "s3"], version = "^1.43.108"}
+
+[tool.poetry.group.test.dependencies]
+pytest = "^9.1.1"
+pytest-cov = "^7.1.0"
+moto = "^5.2.3"
+
+[tool.poetry.group.local]
+optional = true  # pyspark is only installed when requested with --with local
+
+[tool.poetry.group.local.dependencies]
+pyspark = "^4.2.0"
+
+[tool.poetry.group.lambda]
+optional = true  # installed on demand when packaging the Lambda
+
+[tool.poetry.group.lambda.dependencies]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
